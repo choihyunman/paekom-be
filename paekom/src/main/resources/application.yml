@@ -1,0 +1,22 @@
+spring:
+  servlet:
+    multipart:
+  jackson:
+    time-zone: Asia/Seoul
+
+  profiles:
+    active:
+      - local
+    group:
+      local:
+        - oauth
+        - db-local
+      dev:
+        - oauth
+        - db-dev
+    include: db, oauth
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    com.paekom : DEBUG
