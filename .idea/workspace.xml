@@ -5,10 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1d079517-37d7-474a-b83c-d40166c96995" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/appointment/entity/Appointment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/appointment/entity/AppointmentStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/mission/entity/Mission.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/mission/entity/MissionCategory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/mission/entity/MissionFeedback.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/report/entity/Emotion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/report/entity/Report.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/stt/entity/SttJob.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/stt/entity/SttStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/user/entity/OauthAccount.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/user/entity/Provider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/user/entity/Role.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/paekom/src/main/java/com/paekom/domain/user/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
