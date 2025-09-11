@@ -1,18 +1,16 @@
 package com.paekom.domain.report.service;
 
-
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paekom.domain.report.dto.ReportCreateRequest;
-import com.paekom.domain.report.dto.ReportCreateResponse;
-import com.paekom.domain.report.dto.ReportDetailResponse;
+import com.paekom.domain.report.dto.*;
 import com.paekom.domain.report.entity.Emotion;
 import com.paekom.domain.report.entity.Report;
 import com.paekom.domain.report.repository.ReportRepository;
 import com.paekom.domain.stt.entity.SttJob;
 import com.paekom.domain.stt.repository.SttJobRepository;
+import com.paekom.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -34,33 +32,45 @@ public class ReportService {
     private String aiServerUrl;
 
     /**
-     * 리포트 생성 - STT 텍스트 기반 FastAPI 호출 후 DB 저장
+     * 리포트 생성
      */
     public ReportCreateResponse createReport(ReportCreateRequest request) throws Exception {
-        // 1. sttId로 DB에서 STT 텍스트 조회
+        // 1. STT 텍스트 조회
         String transcript = getTranscriptBySttId(request.getSttId());
 
-        // 2. WebClient로 FastAPI 호출
-        JsonNode response = webClient.post()
+        // 2. Python 서버 호출 → ApiResponse<AiReportResponse>로 받기
+        ApiResponse<AiReportResponse> wrapper = webClient.post()
                 .uri(aiServerUrl + "/api/ai/report")
                 .bodyValue(Map.of("transcript", transcript))
                 .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block(); // 동기 처리
+                .bodyToMono(new ParameterizedTypeReference<ApiResponse<AiReportResponse>>() {})
+                .block();
 
-        if (response == null || !"success".equals(response.get("status").asText())) {
+        if (wrapper == null || wrapper.getData() == null) {
             throw new RuntimeException("AI 리포트 생성 실패");
         }
 
-        JsonNode data = response.get("data");
+        AiReportResponse aiResponse = wrapper.getData();
 
-        // 3. Report 엔티티 저장
+        // 3. Emotion 매핑 (null/invalid 대비)
+        Emotion emotion = null;
+        if (aiResponse.getEmotion() != null && !aiResponse.getEmotion().isBlank()) {
+            try {
+                emotion = Emotion.valueOf(aiResponse.getEmotion().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                emotion = Emotion.NEUTRAL; // fallback
+            }
+        } else {
+            emotion = Emotion.NEUTRAL;
+        }
+
+        // 4. Report 저장 (issues, evidence → JSON 문자열로 저장)
         Report report = Report.builder()
-                .summary(data.get("summary").asText())
-                .issues(objectMapper.convertValue(data.get("issues"), List.class))
-                .emotion(Emotion.valueOf(data.get("emotion").asText()))
-                .evidence(data.get("evidence").toString())
-                .overallAssessment(data.get("overall_assessment").asText())
+                .summary(aiResponse.getSummary())
+                .issues(objectMapper.writeValueAsString(aiResponse.getIssues()))
+                .emotion(emotion)
+                .evidence(objectMapper.writeValueAsString(aiResponse.getEvidence()))
+                .overallAssessment(aiResponse.getOverall_assessment())
                 .transcriptFulltext(transcript)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -78,7 +88,7 @@ public class ReportService {
 
         return ReportDetailResponse.builder()
                 .summary(report.getSummary())
-                .issues(report.getIssues())
+                .issues(objectMapper.readValue(report.getIssues(), List.class))
                 .emotion(report.getEmotion())
                 .evidence(objectMapper.readValue(report.getEvidence(), Map.class))
                 .overallAssessment(report.getOverallAssessment())
@@ -86,9 +96,6 @@ public class ReportService {
                 .build();
     }
 
-    /**
-     * STT 결과 텍스트 조회
-     */
     private String getTranscriptBySttId(Integer sttId) {
         SttJob sttJob = sttJobRepository.findById(sttId)
                 .orElseThrow(() -> new NoSuchElementException("STT Job이 존재하지 않습니다."));

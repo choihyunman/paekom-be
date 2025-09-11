@@ -1,8 +1,8 @@
 package com.paekom.domain.report.dto;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class ReportCreateRequest {
-    private Integer sttId;
+    private Integer sttId; // STT 결과 ID
 }

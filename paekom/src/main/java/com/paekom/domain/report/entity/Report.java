@@ -1,13 +1,11 @@
 package com.paekom.domain.report.entity;
 
 import com.paekom.domain.appointment.entity.WebrtcSession;
-import com.paekom.global.converter.StringListJsonConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "reports")
@@ -32,10 +30,8 @@ public class Report {
     @Enumerated(EnumType.STRING)
     private Emotion emotion;
 
-    // List<String> → JSON 자동 변환
-    @Convert(converter = StringListJsonConverter.class)
-    @Column(columnDefinition = "JSON")
-    private List<String> issues;
+    @Lob
+    private String issues;   // JSON 문자열 그대로 저장
 
     @Lob
     private String overallAssessment;
@@ -44,7 +40,7 @@ public class Report {
     private String transcriptFulltext;
 
     @Lob
-    private String evidence;
+    private String evidence; // JSON 문자열 그대로 저장
 
     @Column(length = 512)
     private String reportFileUrl;
