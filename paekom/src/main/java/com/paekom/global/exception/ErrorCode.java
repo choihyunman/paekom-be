@@ -20,13 +20,15 @@ public enum ErrorCode {
      INTERNAL_SERVER_ERROR(500)
      **/
 
+    NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "리소스를 찾을 수 없습니다."),
+    MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 미션을 찾을 수 없습니다."),
+
     // Global Exception
     BAD_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     INVALID_HTTP_MESSAGE_BODY(HttpStatus.BAD_REQUEST,"HTTP 요청 바디의 형식이 잘못되었습니다."),
     UNSUPPORTED_HTTP_METHOD(HttpStatus.METHOD_NOT_ALLOWED,"지원하지 않는 HTTP 메서드입니다."),
     BIND_ERROR(HttpStatus.BAD_REQUEST, "요청 파라미터 바인딩에 실패했습니다."),
     ARGUMENT_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "요청 파라미터 타입이 일치하지 않습니다.")
-
     ;
 
     private final HttpStatus httpStatus;
