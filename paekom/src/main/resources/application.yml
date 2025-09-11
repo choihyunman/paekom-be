@@ -1,6 +1,9 @@
 spring:
   servlet:
     multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
   jackson:
     time-zone: Asia/Seoul
 
@@ -19,4 +22,14 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
-    com.paekom : DEBUG
+    com.paekom: DEBUG
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: paekom
+ai:
+  server:
+    url: http://localhost:8000
