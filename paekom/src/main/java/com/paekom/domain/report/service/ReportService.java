@@ -5,6 +5,7 @@ import com.paekom.domain.report.dto.*;
 import com.paekom.domain.report.entity.Emotion;
 import com.paekom.domain.report.entity.Report;
 import com.paekom.domain.report.repository.ReportRepository;
+import com.paekom.domain.report.repository.projection.ReportProjection;
 import com.paekom.domain.stt.entity.SttJob;
 import com.paekom.domain.stt.repository.SttJobRepository;
 import com.paekom.global.response.ApiResponse;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -100,5 +102,12 @@ public class ReportService {
         SttJob sttJob = sttJobRepository.findById(sttId)
                 .orElseThrow(() -> new NoSuchElementException("STT Job이 존재하지 않습니다."));
         return sttJob.getTranscript();
+    }
+
+    public List<ReportsResponseDto> getReports() {
+        return reportRepository.findByAllOrderByCreatedAtDesc()
+                .stream()
+                .map(p -> new ReportsResponseDto(p.getId(), p.getSummary(), p.getCreatedAt().toLocalDateTime())
+                ).toList();
     }
 }
