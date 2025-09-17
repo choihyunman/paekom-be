@@ -6,6 +6,8 @@ import com.paekom.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/report")
 @RequiredArgsConstructor
@@ -23,5 +25,11 @@ public class ReportController {
     public ApiResponse<ReportDetailResponse> getReport(@PathVariable Integer reportId) throws Exception {
         ReportDetailResponse response = reportService.getReport(reportId);
         return ApiResponse.success(response);
+    }
+
+    @GetMapping
+    public ApiResponse<List<ReportsResponseDto>> getReports() {
+        System.out.println("들어옴");
+        return ApiResponse.success(reportService.getReports());
     }
 }
