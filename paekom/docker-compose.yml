@@ -4,7 +4,7 @@ services:
   # Spring Boot Backend
   backend:
     build:
-      context: ./BE
+      context: ./be
     container_name: backend
     restart: always
     ports:
