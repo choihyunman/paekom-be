@@ -31,7 +31,7 @@ public class SecurityConfig {
         // 개발용 프론트 오리진들 명시
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "http://127.0.0.1:5173"
+                "https://www.paekom.com"
         ));
         config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE"));
         config.setAllowedHeaders(List.of("*"));

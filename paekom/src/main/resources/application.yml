@@ -30,6 +30,6 @@ cloud:
       static: ap-northeast-2
     s3:
       bucket: paekom
-# ai:
-#   server:
-#     url: http://localhost:8000
+ai:
+  server:
+    url: ${AI_SERVER_URL}
