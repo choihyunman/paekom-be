@@ -22,7 +22,7 @@ public class SttJob {
     private Integer id; // INT로 통일
 
     // WebRTC 세션 연관관계 (nullable 허용 → 세션 없는 STT도 가능)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "webrtc_session_id", nullable = true)
     private WebrtcSession webrtcSession;
 
