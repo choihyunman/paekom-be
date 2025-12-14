@@ -2,7 +2,6 @@ package com.paekom.domain.mission.service;
 
 import com.paekom.domain.mission.dto.*;
 import com.paekom.domain.mission.entity.Mission;
-import com.paekom.domain.mission.entity.MissionCategory;
 import com.paekom.domain.mission.repository.MissionRepository;
 import com.paekom.global.exception.ErrorCode;
 import com.paekom.global.exception.NotFoundException;
@@ -13,6 +12,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -75,6 +75,7 @@ public class MissionService {
                 .category(mission.getCategory())
                 .memo(mission.getMemo())
                 .feedback(mission.getFeedback())
+                .createdAt(mission.getCreatedAt())
                 .build();
     }
 
@@ -96,5 +97,18 @@ public class MissionService {
             return aiRes.getData().getFeedback();
         }
         return "피드백 생성 실패";
+    }
+
+    // 전체 목록 조회
+    public List<MissionsResponse> getMissions() {
+        return missionRepository.findAllOrderByCreatedAtDesc()
+                .stream()
+                .map(p -> new MissionsResponse(
+                        p.getId(),
+                        p.getTitle(),
+                        p.getContent(),
+                        p.getCategory(),
+                        p.getCreatedAt().toLocalDateTime()))
+                .toList();
     }
 }

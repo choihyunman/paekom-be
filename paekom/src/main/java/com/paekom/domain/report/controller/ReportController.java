@@ -29,7 +29,6 @@ public class ReportController {
 
     @GetMapping
     public ApiResponse<List<ReportsResponseDto>> getReports() {
-        System.out.println("들어옴");
         return ApiResponse.success(reportService.getReports());
     }
 }
