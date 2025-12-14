@@ -4,6 +4,8 @@ import com.paekom.domain.mission.entity.MissionCategory;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class MissionResponse {
@@ -13,4 +15,5 @@ public class MissionResponse {
     private MissionCategory category;
     private String memo;
     private String feedback;
+    private LocalDateTime createdAt;
 }
