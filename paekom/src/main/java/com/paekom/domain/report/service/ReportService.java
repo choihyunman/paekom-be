@@ -1,6 +1,8 @@
 package com.paekom.domain.report.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paekom.domain.appointment.entity.Appointment;
+import com.paekom.domain.appointment.service.AppointmentService;
 import com.paekom.domain.report.dto.*;
 import com.paekom.domain.report.entity.Emotion;
 import com.paekom.domain.report.entity.Report;
@@ -27,6 +29,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final SttJobRepository sttJobRepository;
     private final ObjectMapper objectMapper;
+    private final AppointmentService appointmentService;
 
     @Value("${ai.server.url}")
     private String aiServerUrl;
@@ -35,6 +38,10 @@ public class ReportService {
      * 리포트 생성
      */
     public ReportCreateResponse createReport(ReportCreateRequest request) throws Exception {
+        // webrtc 세션 찾기
+        Integer appointmentId = request.getBookingId();
+        Appointment appointment = appointmentService.getAppointmentById(appointmentId);
+
         // 1. STT 텍스트 조회
         String transcript = getTranscriptBySttId(request.getSttId());
 
@@ -73,6 +80,7 @@ public class ReportService {
                 .overallAssessment(aiResponse.getOverall_assessment())
                 .transcriptFulltext(transcript)
                 .createdAt(LocalDateTime.now())
+                .appointment(appointment)
                 .build();
 
         Report saved = reportRepository.save(report);
@@ -100,5 +108,16 @@ public class ReportService {
         SttJob sttJob = sttJobRepository.findById(sttId)
                 .orElseThrow(() -> new NoSuchElementException("STT Job이 존재하지 않습니다."));
         return sttJob.getTranscript();
+    }
+
+    public List<ReportsResponseDto> getReports() {
+        return reportRepository.findByAllOrderByCreatedAtDesc()
+                .stream()
+                .map(p -> new ReportsResponseDto(
+                        p.getId(),
+                        p.getSummary(),
+                        p.getCreatedAt().toLocalDateTime(),
+                        p.getSessionId())
+                ).toList();
     }
 }

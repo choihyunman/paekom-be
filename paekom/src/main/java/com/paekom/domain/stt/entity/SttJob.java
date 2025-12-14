@@ -1,6 +1,6 @@
 package com.paekom.domain.stt.entity;
 
-import com.paekom.domain.appointment.entity.WebrtcSession;
+import com.paekom.domain.appointment.entity.Appointment;
 import com.paekom.domain.file.entity.FileMetadata;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,10 +21,10 @@ public class SttJob {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // INT로 통일
 
-    // WebRTC 세션 연관관계 (nullable 허용 → 세션 없는 STT도 가능)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "webrtc_session_id", nullable = true)
-    private WebrtcSession webrtcSession;
+    // Appointment 연관관계 (nullable 허용 → 세션 없는 STT도 가능)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appointment_id", nullable = true)
+    private Appointment appointment;
 
     // 업로드된 파일 참조 (STT Job의 필수 조건)
     @ManyToOne(fetch = FetchType.LAZY)

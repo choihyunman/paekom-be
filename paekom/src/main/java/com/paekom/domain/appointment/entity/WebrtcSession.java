@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 public class WebrtcSession {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id", nullable = false)
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appointment_id")
     private Appointment appointment;
 
     private LocalDateTime startedAt;

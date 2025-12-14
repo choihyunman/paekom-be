@@ -16,7 +16,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // origin 전체 허용(로컬 개발)
-        registry.addHandler(signalingHandler, "ws/signaling")
+        registry.addHandler(signalingHandler, "/ws/signaling")
                 .setAllowedOriginPatterns("*");
     }
 }

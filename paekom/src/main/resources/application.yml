@@ -32,4 +32,4 @@ cloud:
       bucket: paekom
 ai:
   server:
-    url: http://localhost:8000
+    url: ${AI_SERVER_URL}
