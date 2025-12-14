@@ -1,6 +1,5 @@
 package com.paekom.domain.report.repository;
 
-import com.paekom.domain.report.dto.ReportsResponseDto;
 import com.paekom.domain.report.entity.Report;
 import com.paekom.domain.report.repository.projection.ReportProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
