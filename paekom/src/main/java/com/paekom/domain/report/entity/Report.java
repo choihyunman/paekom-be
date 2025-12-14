@@ -1,6 +1,6 @@
 package com.paekom.domain.report.entity;
 
-import com.paekom.domain.appointment.entity.WebrtcSession;
+import com.paekom.domain.appointment.entity.Appointment;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,9 +20,9 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "webrtc_session_id", nullable = true)
-    private WebrtcSession webrtcSession;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appointment_id", nullable = true)
+    private Appointment appointment;
 
     @Lob
     private String summary;

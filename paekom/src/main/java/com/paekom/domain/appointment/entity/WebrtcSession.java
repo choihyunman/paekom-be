@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 public class WebrtcSession {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_id")
     private Appointment appointment;

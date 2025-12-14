@@ -1,8 +1,8 @@
 package com.paekom.domain.report.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paekom.domain.appointment.entity.WebrtcSession;
-import com.paekom.domain.appointment.service.WebrtcSessionService;
+import com.paekom.domain.appointment.entity.Appointment;
+import com.paekom.domain.appointment.service.AppointmentService;
 import com.paekom.domain.report.dto.*;
 import com.paekom.domain.report.entity.Emotion;
 import com.paekom.domain.report.entity.Report;
@@ -29,7 +29,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final SttJobRepository sttJobRepository;
     private final ObjectMapper objectMapper;
-    private final WebrtcSessionService webrtcSessionService;
+    private final AppointmentService appointmentService;
 
     @Value("${ai.server.url}")
     private String aiServerUrl;
@@ -39,8 +39,8 @@ public class ReportService {
      */
     public ReportCreateResponse createReport(ReportCreateRequest request) throws Exception {
         // webrtc 세션 찾기
-        Integer sessionId = request.getBookingId();
-        WebrtcSession session = webrtcSessionService.getWebRTCSession(sessionId);
+        Integer appointmentId = request.getBookingId();
+        Appointment appointment = appointmentService.getAppointmentById(appointmentId);
 
         // 1. STT 텍스트 조회
         String transcript = getTranscriptBySttId(request.getSttId());
@@ -80,7 +80,7 @@ public class ReportService {
                 .overallAssessment(aiResponse.getOverall_assessment())
                 .transcriptFulltext(transcript)
                 .createdAt(LocalDateTime.now())
-                .webrtcSession(session)
+                .appointment(appointment)
                 .build();
 
         Report saved = reportRepository.save(report);
@@ -113,7 +113,11 @@ public class ReportService {
     public List<ReportsResponseDto> getReports() {
         return reportRepository.findByAllOrderByCreatedAtDesc()
                 .stream()
-                .map(p -> new ReportsResponseDto(p.getId(), p.getSummary(), p.getCreatedAt().toLocalDateTime())
+                .map(p -> new ReportsResponseDto(
+                        p.getId(),
+                        p.getSummary(),
+                        p.getCreatedAt().toLocalDateTime(),
+                        p.getSessionId())
                 ).toList();
     }
 }

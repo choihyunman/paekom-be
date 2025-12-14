@@ -1,7 +1,7 @@
 package com.paekom.domain.stt.service;
 
-import com.paekom.domain.appointment.entity.WebrtcSession;
-import com.paekom.domain.appointment.service.WebrtcSessionService;
+import com.paekom.domain.appointment.entity.Appointment;
+import com.paekom.domain.appointment.service.AppointmentService;
 import com.paekom.domain.file.entity.FileMetadata;
 import com.paekom.domain.file.repository.FileMetadataRepository;
 import com.paekom.domain.stt.entity.SttJob;
@@ -22,11 +22,11 @@ public class SttService {
     private final FileMetadataRepository fileMetadataRepository;
     private final SttJobRepository sttJobRepository;
     private final SttClient sttClient;
-    private final WebrtcSessionService webrtcSessionService;
+    private final AppointmentService appointmentService;
 
-    public SttJob createAndRunStt(MultipartFile file, Integer sessionId) {
-        // webrtc 세션 찾기
-        WebrtcSession session = webrtcSessionService.getWebRTCSession(sessionId);
+    public SttJob createAndRunStt(MultipartFile file, Integer appointmentId) {
+        // 예약 찾기
+        Appointment appointment = appointmentService.getAppointmentById(appointmentId);
 
         // 1. S3 업로드
         String s3Key = s3Uploader.uploadFile(file);
@@ -46,7 +46,7 @@ public class SttService {
                 .file(metadata)
                 .status(SttStatus.QUEUED)
                 .createdAt(LocalDateTime.now())
-                .webrtcSession(session)
+                .appointment(appointment)
                 .build();
         sttJobRepository.save(job);
 
@@ -69,7 +69,7 @@ public class SttService {
     }
 
     public SttJob getSttJob(Integer id) {
-        return sttJobRepository.findById(id)
+        return sttJobRepository.findByAppointment_Id(id)
                 .orElseThrow(() -> new RuntimeException("STT Job not found: " + id));
     }
 }

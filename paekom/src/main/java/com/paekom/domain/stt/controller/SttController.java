@@ -18,8 +18,8 @@ public class SttController {
     @PostMapping
     public ResponseEntity<?> uploadAndRequestStt(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("bookingId") Integer sessionId) {
-        SttJob job = sttService.createAndRunStt(file, sessionId);
+            @RequestParam("bookingId") Integer appointmentId) {
+        SttJob job = sttService.createAndRunStt(file, appointmentId);
         return ResponseEntity.ok(ApiResponse.success(new Data(job.getId())));
     }
 

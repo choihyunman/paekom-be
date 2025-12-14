@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -45,10 +46,10 @@ public class AppointmentController {
 
     // 상담 시작
     @PutMapping("/{id}/start")
-    public ApiResponse<String> startAppointment(@PathVariable Integer id) {
+    public ApiResponse<Map<String, Integer>> startAppointment(@PathVariable Integer id) {
         Appointment appointment = service.startedAppointment(id);
-        webrtcSessionService.createWebRTCSession(appointment);
-        return ApiResponse.success("started appointment successfully");
+        Integer sessionId = webrtcSessionService.createWebRTCSession(appointment);
+        return ApiResponse.success(Map.of("sessionId", sessionId));
     }
 
     // 상담 종료
